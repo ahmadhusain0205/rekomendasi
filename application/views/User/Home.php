@@ -14,7 +14,7 @@
                     <div class="card-body">
                         <div class="row no-gutters align-items-center pl-3 pr-3">
                             <div class="col mr-4">
-                                <div class="text-xs font-weight text-danger text-uppercase mb-1">Rating Kuliner sing paling duwur : <br>"<?php foreach($rata_rating as $r) { echo $r->name_place.'"'; ?></div>
+                                <div class="text-xs font-weight text-danger text-uppercase mb-1">Kuliner sing paling rame : <br>"<?php foreach($rata_rating as $r) { echo $r->name_place.'"'; ?></div>
                                 <div class="h5 mb-0 font-weight text-secondary-500"><?php echo round($r->rating, 1); } ?></div>
                             </div>
                             <div class="col-auto">
@@ -29,7 +29,7 @@
                     <div class="card-body">
                         <div class="row no-gutters align-items-center pl-3 pr-3">
                             <div class="col mr-4">
-                                <div class="text-xs font-weight text-warning text-uppercase mb-1">Jumlah Kuliner sing wes daftar</div>
+                                <div class="text-xs font-weight text-warning text-uppercase mb-1">Jumlah Kuliner sing wes kedaftar</div>
                                 <div class="h5 mb-0 font-weight text-secondary-500"><?= $jml_kuliner;?></div>
                             </div>
                             <div class="col-auto">
