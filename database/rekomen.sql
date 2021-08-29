@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 27, 2021 at 08:02 AM
+-- Generation Time: Aug 29, 2021 at 04:18 PM
 -- Server version: 10.4.19-MariaDB
 -- PHP Version: 7.4.20
 
@@ -193,7 +193,7 @@ CREATE TABLE `similarity` (
 --
 
 INSERT INTO `similarity` (`id`, `id_rating`, `id_user`, `id_kuliner`) VALUES
-(191, NULL, 10, 1),
+(191, 3, 10, 1),
 (192, 4, 10, 2),
 (193, 3, 10, 3),
 (194, 3, 10, 4),
@@ -437,7 +437,8 @@ INSERT INTO `user` (`id`, `full_name`, `email`, `address`, `phone_number`, `imag
 (13, 'Shalichajh', 'shali@gmail.com', 'Temanggung', '085859689896', 'default.png', '$2y$10$6/8nv8RgLHrpRPXc/BZWq.Hb/rd7Hbb7KpXDMvQ1zo3RkWw6TKOVO', 1625028775, 2, 2, 1),
 (14, 'Heni Apriliani', 'heni@gmail.com', 'Candimulyo', '081228061352', 'default.png', '$2y$10$r6iTDlaECS/XzAIqCzZ4aOR6XXrppwwFWYFDyhDfk3azcyYNCOm5G', 1625028855, 2, 2, 1),
 (15, 'Inayatun', 'ina@gmail.com', 'Borobudur', '085877177145', 'default.png', '$2y$10$QrY3CKtEbXSsDtFftc6yFeDz7nnwMqdLFg/yJNeHCBmyGOo.mOJQi', 1625028915, 2, 2, 1),
-(47, 'meng', 'meng@gmail.com', 'keji', '123', 'barca.jpg', '$2y$10$a21eh2bVhm5coMa934BKhOS4K6k1PGjmJqviVydQXY42dxVq3F7NC', 1629528000, 2, 1, 1);
+(47, 'meng', 'meng@gmail.com', 'keji', '123', 'barca.jpg', '$2y$10$a21eh2bVhm5coMa934BKhOS4K6k1PGjmJqviVydQXY42dxVq3F7NC', 1629528000, 2, 1, 1),
+(50, 'meng1', 'meng1@gmail.com', 'qwe', '123', 'default.png', '$2y$10$DLt8G41QKn2eQibOijEGget0Ej7k0ZkKHN9pVxLc/XjxkiWJJEQIq', 1630045296, 2, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -483,8 +484,7 @@ CREATE TABLE `v_akar_sum_abs` (
 -- (See below for the actual view)
 --
 CREATE TABLE `v_data_akar_objek` (
-`id_user` int(11)
-,`sum_akar_abs` double
+`id_objek` int(11)
 ,`akar_sum_abs` double
 );
 
@@ -495,8 +495,7 @@ CREATE TABLE `v_data_akar_objek` (
 -- (See below for the actual view)
 --
 CREATE TABLE `v_data_akar_target` (
-`id_user` int(11)
-,`sum_akar_abs` double
+`id_target` int(11)
 ,`akar_sum_abs` double
 );
 
@@ -560,9 +559,9 @@ CREATE TABLE `v_data_target` (
 --
 CREATE TABLE `v_data_txo` (
 `id_objek` int(11)
+,`id_target` int(11)
 ,`id_kuliner` int(11)
 ,`data_objek` decimal(15,4)
-,`id_target` int(11)
 ,`data_target` decimal(15,4)
 ,`x` decimal(30,8)
 );
@@ -584,11 +583,11 @@ CREATE TABLE `v_data_user_allnull` (
 -- (See below for the actual view)
 --
 CREATE TABLE `v_hasil` (
-`id_pembilang` int(11)
+`id_user` int(11)
+,`id_target` int(11)
 ,`pembilang` decimal(52,8)
-,`id_penyebut` int(11)
 ,`penyebut` double
-,`hasil` double(19,2)
+,`cf` double
 );
 
 -- --------------------------------------------------------
@@ -600,18 +599,7 @@ CREATE TABLE `v_hasil` (
 CREATE TABLE `v_pembilang` (
 `id_objek` int(11)
 ,`id_target` int(11)
-,`x` decimal(30,8)
 ,`pembilang` decimal(52,8)
-);
-
--- --------------------------------------------------------
-
---
--- Stand-in structure for view `v_pendekatan`
--- (See below for the actual view)
---
-CREATE TABLE `v_pendekatan` (
-`id_user` int(11)
 );
 
 -- --------------------------------------------------------
@@ -658,17 +646,6 @@ CREATE TABLE `v_rata_rating_user` (
 -- --------------------------------------------------------
 
 --
--- Stand-in structure for view `v_rating`
--- (See below for the actual view)
---
-CREATE TABLE `v_rating` (
-`id_kuliner` int(11)
-,`rat` decimal(14,4)
-);
-
--- --------------------------------------------------------
-
---
 -- Stand-in structure for view `v_sum_akarabs`
 -- (See below for the actual view)
 --
@@ -676,18 +653,6 @@ CREATE TABLE `v_sum_akarabs` (
 `id_user` int(11)
 ,`akar_abs` double
 ,`sum_akar_abs` double
-);
-
--- --------------------------------------------------------
-
---
--- Stand-in structure for view `v_x`
--- (See below for the actual view)
---
-CREATE TABLE `v_x` (
-`id_user` int(11)
-,`id_kuliner` int(11)
-,`id_rating` int(11)
 );
 
 -- --------------------------------------------------------
@@ -724,7 +689,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `v_data_akar_objek`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_data_akar_objek`  AS SELECT `v_akar_sum_abs`.`id_user` AS `id_user`, `v_akar_sum_abs`.`sum_akar_abs` AS `sum_akar_abs`, `v_akar_sum_abs`.`akar_sum_abs` AS `akar_sum_abs` FROM `v_akar_sum_abs` WHERE !(`v_akar_sum_abs`.`id_user` in (select `v_data_target`.`id_user` from `v_data_target`)) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_data_akar_objek`  AS SELECT `v_akar_sum_abs`.`id_user` AS `id_objek`, `v_akar_sum_abs`.`akar_sum_abs` AS `akar_sum_abs` FROM `v_akar_sum_abs` WHERE !(`v_akar_sum_abs`.`id_user` in (select `v_data_target`.`id_user` from `v_data_target`)) ;
 
 -- --------------------------------------------------------
 
@@ -733,7 +698,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `v_data_akar_target`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_data_akar_target`  AS SELECT `v_akar_sum_abs`.`id_user` AS `id_user`, `v_akar_sum_abs`.`sum_akar_abs` AS `sum_akar_abs`, `v_akar_sum_abs`.`akar_sum_abs` AS `akar_sum_abs` FROM `v_akar_sum_abs` WHERE `v_akar_sum_abs`.`id_user` in (select `v_data_target`.`id_user` from `v_data_target`) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_data_akar_target`  AS SELECT `v_akar_sum_abs`.`id_user` AS `id_target`, `v_akar_sum_abs`.`akar_sum_abs` AS `akar_sum_abs` FROM `v_akar_sum_abs` WHERE `v_akar_sum_abs`.`id_user` in (select `v_data_target`.`id_user` from `v_data_target`) ;
 
 -- --------------------------------------------------------
 
@@ -778,7 +743,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `v_data_txo`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_data_txo`  AS SELECT `a`.`id_user` AS `id_objek`, `a`.`id_kuliner` AS `id_kuliner`, `a`.`rru_min_idRating` AS `data_objek`, `b`.`id_user` AS `id_target`, `b`.`rru_min_idRating` AS `data_target`, `a`.`rru_min_idRating`* `b`.`rru_min_idRating` AS `x` FROM (`v_data_objek` `a` join `v_data_target` `b` on(`b`.`id_kuliner` = `a`.`id_kuliner`)) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_data_txo`  AS SELECT `a`.`id_user` AS `id_objek`, `b`.`id_user` AS `id_target`, `a`.`id_kuliner` AS `id_kuliner`, `a`.`rru_min_idRating` AS `data_objek`, `b`.`rru_min_idRating` AS `data_target`, `a`.`rru_min_idRating`* `b`.`rru_min_idRating` AS `x` FROM (`v_data_objek` `a` join `v_data_target` `b` on(`b`.`id_kuliner` = `a`.`id_kuliner`)) ;
 
 -- --------------------------------------------------------
 
@@ -796,7 +761,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `v_hasil`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_hasil`  AS SELECT `b`.`id_objek` AS `id_pembilang`, `b`.`pembilang` AS `pembilang`, `a`.`id_objek` AS `id_penyebut`, `a`.`penyebut` AS `penyebut`, round(`b`.`pembilang` / `a`.`penyebut`,2) AS `hasil` FROM (`v_pembilang` `b` join `v_penyebut` `a` on(`b`.`id_objek` = `a`.`id_objek`)) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_hasil`  AS SELECT `a`.`id_objek` AS `id_user`, `a`.`id_target` AS `id_target`, `a`.`pembilang` AS `pembilang`, `b`.`penyebut` AS `penyebut`, `a`.`pembilang`/ `b`.`penyebut` AS `cf` FROM (`v_pembilang` `a` join `v_penyebut` `b` on(`b`.`id_objek` = `a`.`id_objek` and `b`.`id_target` = `a`.`id_target`)) ORDER BY `a`.`id_target` ASC, `a`.`id_objek` ASC ;
 
 -- --------------------------------------------------------
 
@@ -805,16 +770,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `v_pembilang`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_pembilang`  AS SELECT `v_data_txo`.`id_objek` AS `id_objek`, `v_data_txo`.`id_target` AS `id_target`, `v_data_txo`.`x` AS `x`, sum(`v_data_txo`.`x`) AS `pembilang` FROM `v_data_txo` GROUP BY `v_data_txo`.`id_objek`, `v_data_txo`.`id_target` ;
-
--- --------------------------------------------------------
-
---
--- Structure for view `v_pendekatan`
---
-DROP TABLE IF EXISTS `v_pendekatan`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_pendekatan`  AS SELECT `v_hasil`.`id_pembilang` AS `id_user` FROM `v_hasil` WHERE `v_hasil`.`hasil` in (select max(`v_hasil`.`hasil`) from `v_hasil`) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_pembilang`  AS SELECT `v_data_txo`.`id_objek` AS `id_objek`, `v_data_txo`.`id_target` AS `id_target`, sum(`v_data_txo`.`x`) AS `pembilang` FROM `v_data_txo` GROUP BY `v_data_txo`.`id_objek`, `v_data_txo`.`id_target` ;
 
 -- --------------------------------------------------------
 
@@ -823,7 +779,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `v_penyebut`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_penyebut`  AS SELECT `a`.`id_user` AS `id_objek`, `a`.`akar_sum_abs` AS `akar_abs_objek`, `b`.`id_user` AS `id_target`, `b`.`akar_sum_abs` AS `akar_abs_target`, `a`.`akar_sum_abs`* `b`.`akar_sum_abs` AS `penyebut` FROM (`v_data_akar_objek` `a` join `v_data_akar_target` `b`) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_penyebut`  AS SELECT `a`.`id_objek` AS `id_objek`, `a`.`akar_sum_abs` AS `akar_abs_objek`, `b`.`id_target` AS `id_target`, `b`.`akar_sum_abs` AS `akar_abs_target`, `a`.`akar_sum_abs`* `b`.`akar_sum_abs` AS `penyebut` FROM (`v_data_akar_objek` `a` join `v_data_akar_target` `b`) ORDER BY `a`.`id_objek` ASC, `b`.`id_target` ASC ;
 
 -- --------------------------------------------------------
 
@@ -846,29 +802,11 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
--- Structure for view `v_rating`
---
-DROP TABLE IF EXISTS `v_rating`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_rating`  AS SELECT `similarity`.`id_kuliner` AS `id_kuliner`, avg(`similarity`.`id_rating`) AS `rat` FROM `similarity` GROUP BY `similarity`.`id_kuliner` ;
-
--- --------------------------------------------------------
-
---
 -- Structure for view `v_sum_akarabs`
 --
 DROP TABLE IF EXISTS `v_sum_akarabs`;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_sum_akarabs`  AS SELECT `a`.`id_user` AS `id_user`, `a`.`akar_abs` AS `akar_abs`, (select sum(`b`.`akar_abs`) from `v_akar_abs` `b` where `b`.`id_user` = `a`.`id_user`) AS `sum_akar_abs` FROM `v_akar_abs` AS `a` ;
-
--- --------------------------------------------------------
-
---
--- Structure for view `v_x`
---
-DROP TABLE IF EXISTS `v_x`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_x`  AS SELECT `similarity`.`id_user` AS `id_user`, `similarity`.`id_kuliner` AS `id_kuliner`, `similarity`.`id_rating` AS `id_rating` FROM `similarity` WHERE `similarity`.`id_user` in (select `v_pendekatan`.`id_user` from `v_pendekatan`) AND `similarity`.`id_kuliner` in (select `similarity`.`id_kuliner` from `similarity` where `similarity`.`id_rating` is null) ORDER BY `similarity`.`id_rating` DESC ;
 
 --
 -- Indexes for dumped tables
@@ -979,7 +917,7 @@ ALTER TABLE `similarity`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- Constraints for dumped tables
