@@ -38,7 +38,7 @@ class Kuliner_m extends CI_Model{
         $this->db->delete($table, $where);
     }
     function rata_rating(){
-        return $this->db->query('select DISTINCT(round(avg(id_rating),2)) as rating from similarity WHERE id_rating in (SELECT max(id_rating) FROM similarity) group by id_kuliner')->result();
+        return $this->db->query('select avg(id_rating) as rating, name_place from similarity join kuliner on kuliner.id=similarity.id_kuliner WHERE id_rating is not null group by id_kuliner ORDER BY rating desc LIMIT 1')->result();
     }
     function jml_kuliner(){
         return $this->db->query('select * from kuliner')->num_rows();

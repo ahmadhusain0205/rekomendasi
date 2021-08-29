@@ -14,11 +14,11 @@
                     <div class="card-body">
                         <div class="row no-gutters align-items-center pl-3 pr-3">
                             <div class="col mr-4">
-                                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Rating Kuliner sing paling duwur</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?php foreach($rata_rating as $r) { echo $r->rating; } ?></div>
+                                <div class="text-xs font-weight text-danger text-uppercase mb-1">Rating Kuliner sing paling duwur : <br>"<?php foreach($rata_rating as $r) { echo $r->name_place.'"'; ?></div>
+                                <div class="h5 mb-0 font-weight text-secondary-500"><?php echo round($r->rating, 1); } ?></div>
                             </div>
                             <div class="col-auto">
-                                <i class="fas fa-star fa-3x"></i>
+                                <i class="fas fa-star fa-2x"></i>
                             </div>
                         </div>
                     </div>
@@ -29,11 +29,11 @@
                     <div class="card-body">
                         <div class="row no-gutters align-items-center pl-3 pr-3">
                             <div class="col mr-4">
-                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Jumlah Kuliner sing wes daftar</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $jml_kuliner;?></div>
+                                <div class="text-xs font-weight text-warning text-uppercase mb-1">Jumlah Kuliner sing wes daftar</div>
+                                <div class="h5 mb-0 font-weight text-secondary-500"><?= $jml_kuliner;?></div>
                             </div>
                             <div class="col-auto">
-                                <i class="fas fa-clipboard-list fa-3x"></i>
+                                <i class="fas fa-clipboard-list fa-2x"></i>
                             </div>
                         </div>
                     </div>
@@ -44,11 +44,11 @@
                     <div class="card-body">
                         <div class="row no-gutters align-items-center pl-3 pr-3">
                             <div class="col mr-4">
-                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Jumlah pengguna sing wes daftar</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $jml_users;?></div>
+                                <div class="text-xs font-weight text-success text-uppercase mb-1">Jumlah pengguna sing wes daftar</div>
+                                <div class="h5 mb-0 font-weight text-secondary-500"><?= $jml_users;?></div>
                             </div>
                             <div class="col-auto">
-                                <i class="fas fa-users fa-3x"></i>
+                                <i class="fas fa-users fa-2x"></i>
                             </div>
                         </div>
                     </div>
@@ -59,11 +59,11 @@
                     <div class="card-body">
                         <div class="row no-gutters align-items-center pl-3 pr-3">
                             <div class="col mr-4">
-                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Jumlah pengguna sing anyar</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $jml_baru;?></div>
+                                <div class="text-xs font-weight text-primary text-uppercase mb-1">Jumlah pengguna sing anyar</div>
+                                <div class="h5 mb-0 font-weight text-secondary-500"><?= $jml_baru;?></div>
                             </div>
                             <div class="col-auto">
-                                <i class="fas fa-user fa-3x"></i>
+                                <i class="fas fa-user fa-2x"></i>
                             </div>
                         </div>
                     </div>
