@@ -12,7 +12,7 @@
         <div class="card shadow mb-4 mt-4">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped table-hover" id="dataTable" width="100%" cellspacing="0">
+                    <table class="table table-bordered table-striped table-hover" width="100%" cellspacing="0">
                         <thead align="center">
                             <tr>
                                 <th width="1%">No</th>
