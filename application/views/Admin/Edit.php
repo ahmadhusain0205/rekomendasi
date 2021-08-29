@@ -1,7 +1,4 @@
 <div class="container">
-    <div class="text-center text-dark mt-4">
-        <h3><u>Owah Profil</u></h3>
-    </div>
     <?= form_open_multipart('Admin/Edit_data'); ?>
         <div class="row justify-content-center mt-4">
             <div class="col-lg-4">
