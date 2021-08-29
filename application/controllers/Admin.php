@@ -322,4 +322,71 @@ class Admin extends CI_Controller{
         ');
          redirect('Admin/Culinary');
     }
+    function profile(){
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $data['judul'] = 'Kaca Profil';
+        $data['kuliner'] = $this->Kuliner_m->kuliner();
+        $data['rekomen'] = $this->Kuliner_m->rekomen();
+        $data['all'] = $this->Kuliner_m->get_all('user', ['email' => $this->session->userdata('email')])->row_array();
+        $this->load->view('Templates/Header', $data);
+        $this->load->view('Templates/Sidebar');
+        $this->load->view('Templates/Topbar');
+        $this->load->view('Admin/Profile', $data);
+        $this->load->view('Templates/Endbar', $data);
+        $this->load->view('Templates/Footer', $data);
+    }
+    function edit_profile(){
+        $data['rekomen'] = $this->Kuliner_m->rekomen();
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $data['judul'] = 'Kaca Edit';
+        $data['kuliner'] = $this->Kuliner_m->kuliner();
+        $data['all'] = $this->Kuliner_m->get_all('user', ['email' => $this->session->userdata('email')])->row_array();
+        $this->load->view('Templates/Header', $data);
+        $this->load->view('Templates/Sidebar');
+        $this->load->view('Templates/Topbar');
+        $this->load->view('Admin/Edit', $data);
+        $this->load->view('Templates/Endbar', $data);
+        $this->load->view('Templates/Footer', $data);
+    }
+    function Edit_data()
+    {
+        $data['rekomen'] = $this->Kuliner_m->rekomen();
+        $data['jml_user'] = $this->Kuliner_m->jml_user();
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+            $full_name = $this->input->post('full_name');
+            $address = $this->input->post('address');
+            $phone_number = $this->input->post('phone_number');
+            $email = $this->input->post('email');
+            // cek jika ada gambar baru
+            $upload_image =$_FILES['image']['name'];
+            if($upload_image){
+                $config['allowed_types'] = 'gif|jpg|png|jfif';
+                $config['max_size'] = '2048';
+                $config['upload_path'] = './assets/img/profile/';
+                $this->load->library('upload', $config);
+                if($this->upload->do_upload('image')){
+                    $old_image = $data['user']['image'];
+                    if($old_image != 'default.png'){
+                        unlink(FCPATH . 'assets/img/profile/' . $old_image);
+                    }
+                    $new_image = $this->upload->data('file_name');
+                    $this->db->set('image', $new_image);
+                }else{
+                    echo $this->upload->display_errors();
+                }
+            }
+            $this->db->set('full_name', $full_name);
+            $this->db->set('address', $address);
+            $this->db->set('phone_number', $phone_number);
+            $this->db->where('email', $email);
+            $this->db->update('user');
+            $this->session->set_flashdata('message', '
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Mantap!</strong> Profil e wes ke ubah!.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>');
+            redirect('Admin/profile');
+        }
 }
